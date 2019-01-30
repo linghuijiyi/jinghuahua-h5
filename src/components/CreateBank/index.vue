@@ -1,58 +1,50 @@
 <template>
 	<div class='container'>
-		<div class='user-from'>
-			<div class='user-from-title'>
-				<span class='user-from-title-realname'>实名认证</span>
-				<span>默认填充您已在平台认证的信息</span>
-			</div>
-			<van-cell-group>
-				<div class='user-from-item'>
-					<span class='user-from-item-label'>姓名</span>
-					<el-input class='usre-from-item-input' placeholder='请输入您的姓名' v-model='username'></el-input>
-					<i class='el-icon-circle-close user-from-item-icon'></i>
-				</div>
-				<div class='user-from-item'>
-					<span class='user-from-item-label'>身份证号</span>
-					<el-input class='usre-from-item-input'  placeholder='请输入身份证号' v-model='idCard'></el-input>
-					<i class='el-icon-circle-close user-from-item-icon'></i>
-				</div>
-			</van-cell-group>
-		</div>
-		<div class='user-bank'>
-			<div class='user-bank-titie'>
-				<span class='user-bank-titie-bank'>银行卡信息</span>
-				<span>请添加 <span class='user-bank-titie-username' v-text='showname'></span> 本人的银行卡</span>
-			</div>
-			<van-cell-group>
-				<div class='user-from-item'>
-					<span class='user-from-item-label'>银行卡号</span>
-					<el-input class='usre-from-item-input'  placeholder='请输入您的银行卡号' v-model='bankCard' @blur='handleBlur'></el-input>
-					<i :class="bankCardIcon ? 'el-icon-circle-close' : 'el-icon-circle-check'"
-					:style="{color: bankCardIcon ? 'red' : 'green', lineHeight: '35px', marginLeft: '5px', opacity: bankShowIcon ? 1 : 0}"></i>
-				</div>
-				<div class='bankList'>
-					<span class='user-from-item-label'>银行</span>
-					<el-select
-						class='usre-from-item-input'
-						placeholder='请选择发卡行'
-						v-model='bankValue'
-						size='small'
+		<header>
+            <div class='back' @click='back'>
+                <img src='./../../assets/jhh-back.png' />
+            </div>
+            <span>添加银行卡</span>
+        </header>
+		<div class='jhh-user'>
+			<div class='jhh-user-form-item'>
+                <span class='user-form-text'>姓名</span>
+                <el-input class='form-item-input' placeholder='请输入您的姓名' v-model='username'></el-input>
+                <i class='el-icon-circle-close from-item-icon'></i>
+            </div>
+			<div class='jhh-user-form-item'>
+                <span class='user-form-text'>身份证号</span>
+                <el-input class='form-item-input' placeholder='身份证号' v-model='idCard'></el-input>
+                <i class='el-icon-circle-close from-item-icon'></i>
+            </div>
+            <div class='jhh-user-form-item'>
+                <span class='user-form-text'>银行卡号</span>
+                <el-input class='form-item-input' placeholder='银行卡号' v-model='bankCard' @blur='handleBlur'></el-input>
+                <i :class="bankCardIcon ? 'el-icon-circle-close' : 'el-icon-circle-check'"
+					:style="{color: bankCardIcon ? 'red' : 'green', lineHeight: '55px', marginLeft: '5px', opacity: bankShowIcon ? 1 : 0}"></i>
+            </div>
+            <div class='jhh-user-form-item'>
+                <span class='user-form-text'>银行</span>
+                <el-select
+					class='usre-from-item-input form-item-input'
+					placeholder='请选择发卡行'
+					v-model='bankValue'
+					size='small'
+				>
+					<el-option
+						v-for='item in bankOtios'
+						:key='item.value'
+						:label='item.label'
+						:value='item.value'
 					>
-						<el-option
-							v-for='item in bankOtios'
-							:key='item.value'
-							:label='item.label'
-							:value='item.value'
-						>
-						</el-option>
-					</el-select>
-				</div>
-				<div class='user-from-item'>
-					<span class='user-from-item-label'>手机号</span>
-					<el-input class='usre-from-item-input' placeholder='银行预留手机号' v-model='phone'></el-input>
-					<i class='el-icon-circle-close user-from-item-icon'></i>
-				</div>
-			</van-cell-group>
+					</el-option>
+				</el-select>
+            </div>
+            <div class='jhh-user-form-item' style='border: none'>
+                <span class='user-form-text'>手机号</span>
+                <el-input class='form-item-input' placeholder='银行预留手机号' v-model='phone'></el-input>
+                <i class='el-icon-circle-close from-item-icon'></i>
+            </div>
 		</div>
 		<div>
 			<el-button class='button' size='small' type='primary' @click='Submission' v-if='!sendStatus'>提交</el-button>
@@ -349,6 +341,9 @@
 			},
 			isPoneAvailable(phone) {
 				return /^[1][3,4,5,7,8][0-9]{9}$/.test(phone);
+			},
+			back() {
+				this.$router.push({path: '/BankList'});
 			}
 		}
 	}
@@ -373,81 +368,123 @@
 	.container
 		width 100%
 		height 100vh
-		background #CCCCCC
-		.user-from
-			width 100%
-			.user-from-title
-				width 100%
-				height 40px
-				line-height 40px
-				background #D6D6D6
-				font-size 14px
-				.user-from-title-realname
-					font-weight bold
-			.user-from-item
-				display flex
-				box-sizing border-box
-				padding 10px 15px
-				line-height 40px
-				border-bottom 1px solid #ebedf0
-				.user-from-item-label
-					width 90px
-					min-width 90px
-					max-width 90px
-				.usre-from-item-input
-					flex 1
-				.user-from-item-icon
-					color red
-					font-size 16px
-					line-height 35px
-					margin-left 5px
-					opacity 0
-		.user-bank
-			width 100%
-			.user-from-item
-				display flex
-				box-sizing border-box
-				padding 10px 15px
-				line-height 40px
-				border-bottom 1px solid #ebedf0
-				.user-from-item-label
-					width 90px
-					min-width 90px
-					max-width 90px
-				.usre-from-item-input
-					flex 1
-				.user-from-item-icon
-					color red
-					font-size 16px
-					line-height 35px
-					margin-left 5px
-					opacity 0
-			.user-bank-titie
-				width 100%
-				height 40px
-				line-height 40px
-				background #D6D6D6
-				font-size 14px
-				.user-bank-titie-bank
-					font-weight bold
-				.user-bank-titie-username
-					color red
-			.bankList
-				padding 10px 15px
-				display flex
-				border-bottom 1px solid #ebedf0
-				.user-from-item-label
-					display block
-					width 90px
-					line-height 32px
-					min-width 90px
-					max-width 90px
-		.button
-			margin-top 2.8rem
-			width 100%
-			background #FFFF00
-			border 1px solid #FFFF00
+		background #F2F2F2
+		header
+			height 40px
+			line-height 40px
+			font-size 18px
 			color #000
+			text-align center
+			font-family '微软雅黑'
+			display flex
+			position relative
+			span
+				flex 1
+			.back
+				position absolute
+				left 10px
+				top 8px
+				img
+					display block
+					width 13px
+					height 24px
+		.jhh-user
+			width 94%
+			margin 0 auto
+			margin-top 20px
+			border-radius 8px
+			background #fff
+			box-sizing border-box
+			padding 0 10px
+			.jhh-user-form-item
+				display flex
+				height 55px
+				line-height 55px
+				border-bottom 1px solid #ccc
+				.user-form-text
+					width 1.5rem
+				.from-item-icon
+					line-height 55px
+					color red
+					opacity 0
+				.form-item-input
+					flex 1
+		.button
+			display block
+			height 45px
 			font-size 16px
 			font-family '微软雅黑'
+			padding none
+			width 100%
+			background #169BD5
+			margin 0 auto
+			margin-top 20px
+			margin-bottom 20px
+			border: 1px solid #169BD5
+		// 	.user-from-title
+		// 		width 100%
+		// 		height 40px
+		// 		line-height 40px
+		// 		background #D6D6D6
+		// 		font-size 14px
+		// 		.user-from-title-realname
+		// 			font-weight bold
+		// 	.user-from-item
+		// 		display flex
+		// 		box-sizing border-box
+		// 		padding 10px 15px
+		// 		line-height 40px
+		// 		border-bottom 1px solid #ebedf0
+		// 		.user-from-item-label
+		// 			width 90px
+		// 			min-width 90px
+		// 			max-width 90px
+		// 		.usre-from-item-input
+		// 			flex 1
+		// 		.user-from-item-icon
+		// 			color red
+		// 			font-size 16px
+		// 			line-height 35px
+		// 			margin-left 5px
+		// 			opacity 0
+		// .user-bank
+		// 	width 100%
+		// 	.user-from-item
+		// 		display flex
+		// 		box-sizing border-box
+		// 		padding 10px 15px
+		// 		line-height 40px
+		// 		border-bottom 1px solid #ebedf0
+		// 		.user-from-item-label
+		// 			width 90px
+		// 			min-width 90px
+		// 			max-width 90px
+		// 		.usre-from-item-input
+		// 			flex 1
+		// 		.user-from-item-icon
+		// 			color red
+		// 			font-size 16px
+		// 			line-height 35px
+		// 			margin-left 5px
+		// 			opacity 0
+		// 	.user-bank-titie
+		// 		width 100%
+		// 		height 40px
+		// 		line-height 40px
+		// 		background #D6D6D6
+		// 		font-size 14px
+		// 		.user-bank-titie-bank
+		// 			font-weight bold
+		// 		.user-bank-titie-username
+		// 			color red
+		// 	.bankList
+		// 		padding 10px 15px
+		// 		display flex
+		// 		border-bottom 1px solid #ebedf0
+		// 		.user-from-item-label
+		// 			display block
+		// 			width 90px
+		// 			line-height 32px
+		// 			min-width 90px
+		// 			max-width 90px
 </style>

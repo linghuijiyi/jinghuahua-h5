@@ -1,41 +1,32 @@
 <template>
     <div class='container'>
         <Loading v-if='!banklist.length && !shwoLoading' />
-        <div class='bank-list'>
-            <div v-if='shwoLoading' style="text-align: center; line-height: 50px; font-size: 20px; font-weight: 700;">{{errMsg}}</div>
-            <van-card
-                class='van_card'
-                v-if='banklist.length'        
-                v-for='(item, index) in banklist'
-                :desc="item.bankCard"  
-                :thumb="item.imageURL"
-                :key='index'
-            >
-                <div class='van_icon' slot="footer">
-                    <div class='icon' :style="{background: item.color ? 'red' : ''}" @click='icon(index, item.bankCard)'></div>
+        <div>
+            <header>
+                <div class='back' @click='back'>
+                    <img src='./../../assets/user-back.png' />
                 </div>
-            </van-card>
-            <div class='createBank'>
-                <el-button type='text' class='btn' icon='el-icon-plus' @click='createBank'>添加银行卡</el-button>
-            </div>
-            <div class='supportBank'>
-                <div class='title'>*目前只支持以下银行*</div>
-                <div class='list'>
-                    <van-row>
-                        <van-col class='van-col-item' span='6'>中国银行</van-col>
-                        <van-col class='van-col-item' span='6'>农业银行</van-col>
-                        <van-col class='van-col-item' span='6'>建设银行</van-col>
-                        <van-col class='van-col-item' span='6'>公商银行</van-col>
-                        <van-col class='van-col-item' span='6'>兴业银行</van-col>
-                        <van-col class='van-col-item' span='6'>广大银行</van-col>
-                        <van-col class='van-col-item' span='6'>民生银行</van-col>
-                        <van-col class='van-col-item' span='6'>储蓄银行</van-col>
-                        <van-col class='van-col-item' span='6'>交通银行</van-col>
-                    </van-row>
+                <span>银行卡列表</span>
+            </header>
+            <div class='bank-list'>
+                <div v-if='shwoLoading' style="text-align: center; line-height: 50px; font-size: 20px; font-weight: 700;color: #fff;margin: 50px 0;">{{errMsg}}</div>
+                <van-card
+                    class='van_card'
+                    v-if='banklist.length'        
+                    v-for='(item, index) in banklist'
+                    :desc="item.bankCard"  
+                    :thumb="item.imageURL"
+                    :key='index'
+                >
+                    <div class='van_icon' slot="footer">
+                        <div class='icon' :style="{background: item.color ? 'red' : ''}" @click='icon(index, item.bankCard)'></div>
+                    </div>
+                </van-card>
+                <div v-if='createBankShow' class='createBank' @click='createBank'>
+                    <el-button type='text' class='btn' icon='el-icon-plus' >添加银行卡</el-button>
                 </div>
             </div>
         </div>
-        
     </div>
 </template>
 
@@ -49,7 +40,8 @@
             return {
                 banklist: [],
                 shwoLoading: false,
-                errMsg: '没有银行卡信息！'
+                errMsg: '没有银行卡信息！',
+                createBankShow: false
             }
         },
         created() {
@@ -94,7 +86,10 @@
                                     }
                                 }
                             }
-                            setTimeout(() => { this.banklist = list }, 1500)
+                            setTimeout(() => {
+                                this.banklist = list;
+                                this.createBankShow = true;
+                            }, 1500)
                         } else {
                             this.shwoLoading = true;
                             this.$toast(res.msg);
@@ -129,6 +124,9 @@
             },
             createBank() {
                 this.$router.push({path: '/CreateBank'});
+            },
+            back() {
+                this.$router.push({path: '/LoanInfo'});
             }
         },
         components: {
@@ -153,28 +151,54 @@
         line-height 60px
         font-size .28rem
     .container
+        min-height 100vh
+        background-color #333333
+        padding 10px 15px
+        box-sizing border-box
+        header
+            height 40px
+            line-height 40px
+            font-size 18px
+            color #000
+            text-align center
+            font-family '微软雅黑'
+            display flex
+            position relative
+            span
+                flex 1
+                color #fff
+            .back
+                position absolute
+                left 10px
+                top 8px
+                img
+                    display block
+                    width 13px
+                    height 24px
         .van_card
-            background #fff
             position relative
             border-bottom 1px solid #ccc
+            border-radius 6px
+            margin-bottom 10px
             .icon
                 position absolute
                 width 15px
                 height 15px
                 border 1px solid #ccc
-                border-radius 50%
+                border-radius 55%
                 right 10px
                 top 50%
                 font-size .4rem
-                transform translateY(-50%)
         .createBank
             height .8rem
             min-height .8rem
             line-height .8rem
             background #F2F2F2
             padding-left 15px
+            text-align center
+            background-color #0f95ff
             .btn
-                color #666
+                color #fff
                 height .8rem
                 font-size .16rem
         .supportBank

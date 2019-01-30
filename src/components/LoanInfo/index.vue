@@ -1,33 +1,39 @@
 <template>
     <div class='container'>
+        <header>
+            <div class='back' @click='back'>
+                <img src='./../../assets/jhh-back.png' />
+            </div>
+            <span>借贷额度</span>
+        </header>
         <div class='banner'>
-            <div class='banner-title'>- 您的贷款额度 -</div>
-            <h2 class='banner-price'>20000元</h2>
+            <div class='banner-title'>您的贷款额度</div>
+            <h4 class='banner-price'>￥20000元</h4>
         </div>
         <div class='loanterm'>
             <div class='loanterm-title'>- 贷款期限（月） -</div>
-            <el-radio-group class='loanterm-group' v-model='loanTerm' fill='#FF3300'>
+            <el-radio-group class='loanterm-group' v-model='loanTerm' fill='#0F95FF'>
                 <el-radio-button label='7'>7月</el-radio-button>
                 <el-radio-button label='14'>14月</el-radio-button>
                 <el-radio-button label='21'>21月</el-radio-button>
             </el-radio-group>
         </div>
         <div class='payment'>
+            
+        </div>
+        <div class='payment'>
             <van-nav-bar class='payment-title' :border='false'>
                 <div class='payment-title-left' slot='left'>提现支付</div>
-                <div class='payment-title-title' slot='title'>￥{{price}}</div>
+                <div class='payment-title-title' slot='right'>￥{{price}}</div>
             </van-nav-bar>
             <van-nav-bar :border='false'>
-                <el-switch v-model='queue' active-color='#FF3300' slot='left' inactive-color='#999999' @change='switchChange'></el-switch>
-                <div class='payment-queue' slot='title'>我要插队</div>
-                <div class='payment-queue' slot='right'>
-                    <img src="./../../assets/sz.png">
-                </div>
+                <el-switch v-model='queue' active-color='#0F95FF' slot='right' inactive-color='#E6E6E6' @change='switchChange'></el-switch>
+                <div class='payment-queue' slot='left'>我要插队</div>
             </van-nav-bar>
-            <div>
+            <div  @click='icon'>
                 <van-card class='van_card' :desc="'卡号:' + bankCard" :thumb='imageURL'>
                     <div class='van_icon' slot='footer'>
-                        <van-icon  name='arrow' @click='icon' />
+                        <van-icon  name='arrow' />
                     </div>
                 </van-card>
             </div>
@@ -131,7 +137,10 @@
             },
             icon() {
                 this.$router.push({path: '/BankList'});
-            }
+            },
+            back() {
+                this.$router.push({path: '/UserInfo'});
+            },
         }
     }
 </script>
@@ -143,6 +152,7 @@
         border: 1px solid #999999;
     .container >>> .van-card__thumb
         height 60px
+        width 70px
     .container >>> .van-card__thumb img
         height 100%
     .container >>> .van-card__content
@@ -153,34 +163,72 @@
         max-height 60px
         height 60px
         line-height 60px
-        font-size .28rem
+        font-size 14px
+    .container >>> .el-radio-button__inner
+        padding 0
+        width 60px
+        height 60px
+        line-height 60px
+        text-align center
+        border-radius 50%
+        background-color #E6E6E6
+        border none
     .container
         width 100%
+        min-height 100vh
+        header
+            height 40px
+            line-height 40px
+            font-size 18px
+            color #000
+            text-align center
+            font-family '微软雅黑'
+            display flex
+            position relative
+            background-color #fff
+            span
+                flex 1
+            .back
+                position absolute
+                left 10px
+                top 8px
+                img
+                    display block
+                    width 13px
+                    height 24px
         .banner
             width 100%
-            height 3.4rem
+            height 170px
             background #8FAEDB
             text-align center
-            padding-top .5rem
+            padding-top 50px
             box-sizing border-box
             font-family '微软雅黑'
+            background url('./../../assets/bj-bank.png')
+            background-size cover
+            background-repeat no-repeat
+            letter-spacing 3px
             .banner-title
-                font-size .4rem
-                margin-bottom .8rem
+                font-size 20px
+                color #fff
+                margin-bottom 5px
             .banner-price
-                font-size .7rem
+                font-size 35px
+                color #FFD429
         .loanterm
-            width 100%
-            height 3.4rem
-            padding-top .9rem
+            height 130px
+            width 95%
+            margin 0 auto
+            background-color #fff
+            margin-top 10px
+            border-radius 5px
             box-sizing border-box
+            padding-top 15px
             font-family '微软雅黑'
-            background #8FAEDB
-            margin .24rem 0
             .loanterm-title
-                font-size .4rem
                 text-align center
-                margin-bottom .7rem
+                font-size 18px
+                margin-bottom 15px
             .loanterm-group
                 width 100%
                 display flex
@@ -188,39 +236,46 @@
                 label
                     flex 1
         .payment
-            width 100%
-            background #8FAEDB
+            width 95%
+            margin 0 auto
+            margin-top 10px
+            padding 0 10px
+            box-sizing border-box
+            border-radius 5px
+            background #fff
             .van-nav-bar
-                background #8FAEDB
-                border-bottom 1px solid #999999
+                height 55px
+                border-bottom 1px solid #F2F2F2
                 .payment-title-left
-                    font-size .35rem
+                    font-size 16px
+                    color #363636
                 .payment-title-title
-                    color #FF0046
-                    font-size .35rem
+                    color #FF9A28
+                    font-size 16px
                 .payment-queue
                     color #000
-                    font-size .35rem
+                    font-size 16px
                     img
                         display block
                         width 45px
                         height 45px
             .van_card
-                background #8FAEDB
+                background #fff
                 position relative
                 .van_icon
                     position absolute
                     right 10px
                     top 50%
-                    font-size .4rem
+                    font-size 18px
                     transform translateY(-50%)
         .button
             display block
-            width 100%
-            background #FFFF00
-            color #000000
-            margin 0 auto
-            margin-top .5rem
-            border-radius 15px
-            border: 1px solid #FFFF00;
+            width 80%
+            margin 50px auto 20px auto
+            height 45px
+            color #fff
+            background #0F95FF
+            border-radius 25px
+            font-size 16px
+            border: 1px solid #0F95FF
 </style>

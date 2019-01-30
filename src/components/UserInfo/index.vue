@@ -1,45 +1,28 @@
 <template>
     <div class='container'>
-        <div class='header'>鲸&nbsp;&nbsp;花&nbsp;&nbsp;花</div>
-        <div class='user-form'>
-            <div class='user-form-item'>
+        <header>
+            <div class='back' @click='back'>
+                <img src='./../../assets/jhh-back.png' />
+            </div>
+            <span>信息填写</span>
+        </header>
+        <div class='jhh-user'>
+            <div class='jhh-user-form-item'>
                 <span class='user-form-text'>姓名</span>
                 <el-input class='form-item-input' placeholder='请输入您的姓名' v-model='username'></el-input>
                 <i class='el-icon-circle-close from-item-icon'></i>
             </div>
-            <div class='user-form-item'>
+            <div class='jhh-user-form-item'>
                 <span class='user-form-text'>身份证号</span>
                 <el-input class='form-item-input' placeholder='请输入您的身份证号' v-model='idCard'></el-input>
                 <i class='el-icon-circle-close from-item-icon'></i>
             </div>
-            <div class='user-form-item'>
+            <div class='jhh-user-form-item'>
                 <span class='user-form-text'>芝麻分</span>
                 <el-input class='form-item-input' placeholder='请输入您的芝麻分' v-model='sesameScore'></el-input>
                 <i class='el-icon-circle-close from-item-icon'></i>
             </div>
-            <div class='user-form-item'>
-                <span class='user-form-text'>职业身份</span>
-                <el-select class='form-item-input' placeholder='请选择' v-model='profession' size='small'>
-                    <el-option v-for='item in professionList' :key='item.value' :label='item.label' :value='item.value'></el-option>
-                </el-select>
-                <i class='el-icon-circle-close from-item-icon'></i>
-            </div>
-            <div class='user-form-item' :style="{display: profession === '0' ? 'flex' : 'none'}">
-                <span class='user-form-text'>月工资(元)</span>
-                <el-input v-model='incomeMonth' class='form-item-input' placeholder='请输入您的月工资'></el-input>
-                <i class='el-icon-circle-close from-item-icon'></i>
-            </div>
-            <div class='user-form-item' :style="{display: profession === '1' ? 'flex' : 'none'}">
-                <span class='user-form-text'>月流水(元)</span>
-                <el-input v-model='incomeMonth' class='form-item-input' placeholder='请输入您的月流水'></el-input>
-                <i class='el-icon-circle-close from-item-icon'></i>
-            </div>
-            <div class='user-form-item' :style="{display: profession === '2' ? 'flex' : 'none'}">
-                <span class='user-form-text'>月收入(元)</span>
-                <el-input v-model='incomeMonth' class='form-item-input' placeholder='请输入您的月收入'></el-input>
-                <i class='el-icon-circle-close from-item-icon'></i>
-            </div>
-            <div class='user-form-item' style="margin-bottom: .2rem;">
+            <div class='jhh-user-form-item' style="margin-bottom: .2rem;">
                 <span class='user-form-text name'>工资发放</span>
                 <el-select class='form-item-input' placeholder='请选择' v-model='payroll' size='small'>
                     <el-option v-for='item in salaryOtios' :key='item.value' :label='item.label' :value='item.value'>
@@ -47,42 +30,86 @@
                 </el-select>
                 <i class='el-icon-circle-close from-item-icon'></i>
             </div>
+            <div class='jhh-user-form-item' :style="{borderBottom: profession === '' ? 'none' : '1px solid #ccc'}">
+                <span class='user-form-text'>职业身份</span>
+                <el-select class='form-item-input' placeholder='请选择' v-model='profession' size='small'>
+                    <el-option v-for='item in professionList' :key='item.value' :label='item.label' :value='item.value'></el-option>
+                </el-select>
+                <i class='el-icon-circle-close from-item-icon'></i>
+            </div>
+            <div class='jhh-user-form-item' :style="{display: profession === '0' ? 'flex' : 'none', borderBottom: 'none'}">
+                <span class='user-form-text'>月工资(元)</span>
+                <el-input v-model='incomeMonth' class='form-item-input' placeholder='请输入您的月工资'></el-input>
+                <i class='el-icon-circle-close from-item-icon'></i>
+            </div>
+            <div class='jhh-user-form-item' :style="{display: profession === '1' ? 'flex' : 'none', borderBottom: 'none'}">
+                <span class='user-form-text'>月流水(元)</span>
+                <el-input v-model='incomeMonth' class='form-item-input' placeholder='请输入您的月流水'></el-input>
+                <i class='el-icon-circle-close from-item-icon'></i>
+            </div>
+            <div class='jhh-user-form-item' :style="{display: profession === '2' ? 'flex' : 'none', borderBottom: 'none'}">
+                <span class='user-form-text'>月收入(元)</span>
+                <el-input v-model='incomeMonth' class='form-item-input' placeholder='请输入您的月收入'></el-input>
+                <i class='el-icon-circle-close from-item-icon'></i>
+            </div>
+        </div>
+        <div class='jhh-user'>
+            <div class='jhh-user-form-item'>
+                <span class='user-form-text'>卡号</span>
+                <el-input class='form-item-input' placeholder='请输入您的银行卡号' v-model='bankCard' @blur='handleBlur'></el-input>
+                <i :class="bankCardIcon ? 'el-icon-circle-close' : 'el-icon-circle-check'"
+                :style="{color: bankCardIcon ? 'red' : 'green', lineHeight: '55px', marginLeft: '5px', opacity: bankShowIcon ? 1 : 0}"></i>
+            </div>
+            <div class='jhh-user-form-item'>
+                <span class='user-form-text'>银行</span>
+                <el-select class='form-item-input' placeholder='请选择' v-model='bank' :size='size'>
+                    <el-option v-for='item in bankOtios' :key='item.value' :label='item.label' :value='item.value'></el-option>
+                </el-select>
+                <i class='el-icon-circle-close from-item-icon'></i>
+            </div>
+            <div class='jhh-user-form-item' style="borderBottom: none">
+                <span class='user-form-text'>手机号</span>
+                <el-input class='form-item-input' placeholder='银行预留手机号' v-model='phone'></el-input>
+                <i class='el-icon-circle-close from-item-icon'></i>
+            </div>
+        </div>
+        <div class='jhh-user'>
             <van-collapse v-model='activeNames'>
                 <van-collapse-item title='更多' :border='false'>
-                    <div class='user-form-item'>
-                        <span class='user-form-text'>房产信息</span>
+                    <div class='item'>
+                        <div class='user-form-text'>房产信息</div>
                         <el-radio-group class='form-item-input' v-model='houseInfo' fill='#169bd5' :size='size'>
                             <el-radio-button label='1'>有房贷</el-radio-button>
                             <el-radio-button label='0'>无房</el-radio-button>
                             <el-radio-button label='2'>无房贷</el-radio-button>
                         </el-radio-group>
                     </div>
-                    <div class='user-form-item'>
-                        <span class='user-form-text'>车产信息</span>
+                    <div class='item'>
+                        <div class='user-form-text'>车产信息</div>
                         <el-radio-group class='radio-group' v-model='carInfo' fill='#169bd5' :size='size'>
                             <el-radio-button label='1'>有</el-radio-button>
                             <el-radio-button label='0'>无</el-radio-button>
                             <el-radio-button label='2'>无车贷</el-radio-button>
                         </el-radio-group>
                     </div>
-                    <div class='user-form-item'>
-                        <span class='user-form-text'>公积金</span>
+                    <div class='item'>
+                        <div class='user-form-text'>公积金</div>
                         <el-radio-group class='radio-group' v-model='accumulationFund' fill='#169bd5' :size='size'>
                             <el-radio-button label='1'>有</el-radio-button>
                             <el-radio-button label='0'>无</el-radio-button>
                             <el-radio-button label='2'>有超过半年</el-radio-button>
                         </el-radio-group>
                     </div>
-                    <div class='user-form-item'>
-                        <span class='user-form-text'>社保</span>
+                    <div class='item'>
+                        <div class='user-form-text'>社保</div>
                         <el-radio-group class='radio-group' v-model='socialSecurity' fill='#169bd5' :size='size'>
                             <el-radio-button label='1'>有</el-radio-button>
                             <el-radio-button label='0'>无</el-radio-button>
                             <el-radio-button label='2'>有超过半年</el-radio-button>
                         </el-radio-group>
                     </div>
-                    <div class='user-form-item'>
-                        <span class='user-form-text'>信用卡</span>
+                    <div class='item'>
+                        <div class='user-form-text'>信用卡</div>
                         <el-radio-group class='radio-group' v-model='creditcard' fill='#169bd5' :size='size'>
                             <el-radio-button label='1'>有</el-radio-button>
                             <el-radio-button label='0'>无</el-radio-button>
@@ -91,32 +118,14 @@
                     </div>
                 </van-collapse-item>
             </van-collapse>
-            <div class='user-form-item'>
-                <span class='user-form-text'>银行</span>
-                <el-select class='form-item-input' placeholder='请选择' v-model='bank' :size='size'>
-                    <el-option v-for='item in bankOtios' :key='item.value' :label='item.label' :value='item.value'></el-option>
-                </el-select>
-                <i class='el-icon-circle-close from-item-icon'></i>
-            </div>
-            <div class='user-form-item'>
-                <span class='user-form-text'>卡号</span>
-                <el-input class='form-item-input' placeholder='请输入您的银行卡号' v-model='bankCard' @blur='handleBlur'></el-input>
-                <i :class="bankCardIcon ? 'el-icon-circle-close' : 'el-icon-circle-check'"
-                :style="{color: bankCardIcon ? 'red' : 'green', lineHeight: '35px', marginLeft: '5px', opacity: bankShowIcon ? 1 : 0}"></i>
-            </div>
-            <div class='user-form-item'>
-                <span class='user-form-text'>手机号</span>
-                <el-input class='form-item-input' placeholder='银行预留手机号' v-model='phone'></el-input>
-                <i class='el-icon-circle-close from-item-icon'></i>
-            </div>
         </div>
         <div>
-            <el-button class='button' size='small' type='primary'  v-if='!sendStatus' @click='handleSendCode'>提交资料</el-button>
+            <el-button class='button' size='small' type='primary'  v-if='!sendStatus' @click='handleSendCode'>获取我的借款额度</el-button>
             <el-button class='button' size='small' type='primary' disabled style='background: #ccc;border: 1px solid #ccc;color: red;' v-if='sendStatus'>{{sendTime}}后重新提交</el-button>
         </div>
         <van-dialog v-model='showDialog' show-cancel-button :before-close='handleUploadClick'>
             <div class='user-form-item user-form-item-dialog'>
-                <el-input class='form-item-smscode' placeholder='请输入短信验证码' v-model='smsCode'></el-input>
+                <el-input class='form-item-smscode' style="height: 50px; lineHeight: 50px; border: 1px solid #ccc; box-sizing: border-box;" placeholder='请输入短信验证码' v-model='smsCode'></el-input>
             </div>
         </van-dialog>
     </div>
@@ -252,6 +261,7 @@
                 this.$router.push({path: '/'});
                 return;
             }
+
         },
         methods: {
             handleBlur() {
@@ -296,7 +306,7 @@
                     this.$toast('请输入工资信息。');
                     return;
                 }
-                if(!regScore.test(this.incomeMonth)){
+                if(!this.regNum.test(this.incomeMonth)){
                     this.$toast('工资信息只能输入数字。');
                     return;
                 }
@@ -397,7 +407,7 @@
                         done(false);
                         return;
                     }
-                    if(!regScore.test(this.incomeMonth)){
+                    if(!this.regNum.test(this.incomeMonth)){
                         this.$toast('工资信息只能输入数字。');
                         done(false);
                         return;
@@ -492,6 +502,9 @@
                     done();
                 }
             },
+            back() {
+                this.$router.push({path: '/'});
+            },
             isPoneAvailable(phone) {
                 return /^[1][3,4,5,7,8][0-9]{9}$/.test(phone);
             },
@@ -510,32 +523,39 @@
 </script>
 
 <style scoped lang='stylus'>
+    .container >>> input::-webkit-input-placeholder
+        text-align right
     .container >>> .van-dialog
-        padding 10px 0px 0 0px
+        padding 20px 10px 20px 10px
     .container >>> .van-dialog .van-button
-        border-right 1px solid #ccc
+        border 1px solid #ccc
+        border-top none
     .container >>> [class*=van-hairline]::after
         content ''
         border none
     .container >>> .van-cell
-        padding 0 .3rem
+        padding 0
         margin-bottom .2rem
+        height 50px
     .container >>> .van-cell__title span
         display block
         width 1.5rem
-        text-align right
-        line-height 35px
+        line-height 50px
         margin-right 10px
         color #333
         font-size 14px
+    .container >>> .van-cell__right-icon
+        top 50%
+        margin-top -12px
     .container >>> .el-input__inner
-        border 1px solid #ccc
+        border none
         border-radius 20px
         padding-left 10px
-        height 35px
+        height 55px
+        line-height 55px
     .container >>> .form-item-smscode .el-input__inner
         border none
-        height 33px
+        height 48px
     .container >>> .van-collapse-item__content
         padding 0
     .container >>> .van-button--mini
@@ -543,60 +563,70 @@
         padding 0 .1rem
         min-width .8rem
     .container >>> .el-radio-button__inner
-        border-radius 30px
-        background #fff
-        min-width .8rem
-        max-width 5rem
-        margin 0 .1rem
-        border: 1px solid #ccc;
+        border-radius 40px
+        background #E6E6E6
+        min-width 70px
+        margin-right .25rem
     .container
-        width 100%
-        .header
-            height 44px
-            line-height 44px
-            background #169bd5
-            margin-bottom .6rem
+        background #F2F2F2
+        min-height 100vh
+        header
+            height 40px
+            line-height 40px
+            font-size 18px
+            color #000
             text-align center
-            font-size 23px
-            color #fff
-            font-weight bold
-        .user-form-item
+            font-family '微软雅黑'
             display flex
-            padding 0 .3rem
-            height 35px
-            margin-bottom .6rem
-            .user-form-text
-                width 1.5rem
-                text-align right
-                line-height 35px
-                margin-right 10px
-                color #333
-                font-size 14px
-            .form-item-input
+            position relative
+            span
                 flex 1
-            .from-item-icon
-                color red
-                font-size 16px
-                line-height 35px
-                margin-left 5px
-                opacity 0
-        .user-form-item-dialog
-            padding 10px 10px
-            margin 0
-            border-bottom 1px solid #ccc
-        .form-item-smscode
-            flex 1
-            border 1px solid #ccc
-            input
-                height 32px
+            .back
+                position absolute
+                left 10px
+                top 8px
+                img
+                    display block
+                    width 13px
+                    height 24px
+        .jhh-user
+            background #fff
+            width 94%
+            margin 0 auto
+            margin-top 10px
+            border-radius 8px
+            box-sizing border-box
+            padding 0 10px
+            .jhh-user-form-item
+                display flex
+                height 55px
+                line-height 55px
+                border-bottom 1px solid #ccc
+                .user-form-text
+                    width 1.5rem
+                .from-item-icon
+                    line-height 55px
+                    color red
+                    opacity 0
+                .form-item-input
+                    flex 1
+            .item
+                .user-form-text
+                    width 100%
+                    margin-bottom 5px
+                .el-radio-group
+                    width 100%
+                    margin-bottom 10px
         .button
             display block
+            height 45px
+            font-size 16px
+            font-family '微软雅黑'
             padding none
-            width 2.9rem
+            width 100%
             background #169BD5
             margin 0 auto
-            margin-top .5rem
-            margin-bottom .5rem
-            border-radius 6px
+            margin-top 20px
+            margin-bottom 20px
             border: 1px solid #169BD5
 </style>

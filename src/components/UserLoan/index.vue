@@ -2,45 +2,60 @@
     <div>
         <div class='container'>
             <div class='userloan'>
-                <div>
-                    <p>借款金额</p>
-                    <h4>{{loanAmount}}元</h4>
-                </div>
-                <div>
-                    <p>借款期限</p>
-                    <h4>{{loanTerm}}月</h4>
-                </div>
-                <div>
-                    <p>借款进度</p>
-                    <h4>{{auditMsg}}</h4>
+                <header>
+                    <div class='back' @click='back'>
+                        <img src='./../../assets/user-back.png' />
+                    </div>
+                    <span>我的借款</span>
+                </header>
+                <div class='userloan-time'>
+                    <div>
+                        <p>借款金额</p>
+                        <h4>{{loanAmount}}元</h4>
+                    </div>
+                    <div>
+                        <p>借款期限</p>
+                        <h4>{{loanTerm}}月</h4>
+                    </div>
+                    <div>
+                        <p>借款进度</p>
+                        <h4>{{auditMsg}}</h4>
+                    </div>
                 </div>
             </div>
             <div class='refund'>
-                <h4>申请以下产品，被即可退款，最高可退25元</h4>
+                <p>申请以下产品，注册返现，被拒包赔</p>
                 <el-button class='button' size="small" type="primary" @click='refund'>我要退款</el-button>
             </div>
-            <div v-if='productList.length' v-for='(item, index) in productList'  @click='product(item.url)'>
-                <van-card
-                    :thumb="item.icon"
-                    :key='index'
-                    :centered='true'
-                    class='van_card'
+            <div class='productList'>
+                <div
+                    class='productList-item'
+                    v-if='productList.length'
+                    v-for='(item, index) in productList'
+                    @click='product(item.url, item.id)'
                 >
-                    <div class='title' slot="title" v-text='item.productName'></div>
-                    <div slot="desc" class='desc'>
-                        <div>
-                            <span>利率低至{{item.dayRate}}%</span>
-                            <span>审核通过率：{{item.passRate}}%</span>
+                    <van-card
+                        :thumb="item.icon"
+                        :key='index'
+                        :centered='true'
+                        class='van_card'
+                    >
+                        <div class='title' slot="title" v-text='item.productName'></div>
+                        <div slot="desc" class='desc'>
+                            <div>
+                                <span>利率低至{{item.dayRate}}%</span>
+                                <span>审核通过率：{{item.passRate}}%</span>
+                            </div>
+                            <div>
+                                <span>{{item.productDescribe}}</span>
+                                <span>最高放款金额{{item.maxLoanAmount}}</span>
+                            </div>
                         </div>
-                        <div>
-                            <span>{{item.productDescribe}}</span>
-                            <span>最高放款金额{{item.maxLoanAmount}}</span>
+                        <div class='footer' slot='footer'>
+                            <van-icon  name="arrow"/>
                         </div>
-                    </div>
-                    <div class='footer' slot='footer'>
-                        <van-icon  name="arrow"/>
-                    </div>
-                </van-card>
+                    </van-card>
+                </div>
             </div>
             <div v-if='noList' style="text-align: center; line-height: 50px;">
                 暂时没有相关数据。。。
@@ -123,14 +138,19 @@
                     }
                 })
             },
-            product(url) {
+            product(url, id) {
+                const path = `${baseUrl}h5/customer/send/advertisingUvNumber`;
+                fatch(path, 'get', {advertisingId: id, phone: Storage.get('user').phone}).then((res) => {});
                 window.location.href = url;
             },
             refund() {
                 this.$dialog.alert({
                     message: '您的借款申请失败，退款请联系鲸花花客服。'
                 });
-            }
+            },
+            back() {
+                this.$router.back(-1)
+            },
         },
         components: {
             Loading
@@ -141,39 +161,65 @@
 <style scoped lang='stylus'>
     .container >>> .van-card__thumb
         padding 10px 0
-        width 70px
         box-sizing border-box
+        margin 0
         img
             display block
             height 100%
             width 70px
+            margin 0
     .container >>> .van-card__content
         padding 10px 0
+        margin-right 25px
         box-sizing border-box
+        min-width 0
     .container
         width 100%
         min-height 100vh
         background #F2F2F2
         .userloan
-            height 106px
             background #fff
-            display flex
-            div
-                width 33.333%
-                height 100%
+            background url('./../../assets/jk-gj.png')
+            background-repeat no-repeat
+            background-size cover
+            color #fff
+            header
+                height 40px
+                line-height 40px
+                font-size 18px
+                color #000
                 text-align center
-                padding 30px 0
-                box-sizing border-box
                 font-family '微软雅黑'
-                p
-                    margin-bottom 5px
-                h4
-                    font-weight bold
-                    font-size 16px
+                display flex
+                position relative
+                span
+                    flex 1
+                    color #fff
+                .back
+                    position absolute
+                    left 10px
+                    top 8px
+                    img
+                        display block
+                        width 13px
+                        height 24px
+            .userloan-time
+                display flex
+                div
+                    width 33.333%
+                    height 100%
+                    text-align center
+                    padding 30px 0
+                    box-sizing border-box
+                    font-family '微软雅黑'
+                    p
+                        margin-bottom 5px
+                    h4
+                        font-weight bold
+                        font-size 16px
         .refund
             padding 20px 0 30px 0
-            border-bottom 1px solid #000
-            h4
+            p
                 text-align center
                 margin-bottom 15px
             .button
@@ -185,24 +231,36 @@
                 border-radius 20px
                 color #fff
                 font-family '微软雅黑'
-        .van_card
-            width 100%
-            position relative
-            .title
-                font-size 20px
-                font-weight bold
-            .desc
-                width 100%
-                margin-top 7px
-                div:nth-child(1)
-                    margin-bottom 7px
-                div
-                    span
-                        margin-right .4rem
-            .footer
-                position absolute
-                top 50%
-                right .05rem
-                transform translateY(-50%)
-                font-size 26px
+        .productList
+            width 90%
+            margin 0 auto
+            background-color #fff
+            border-radius 8px
+            .productList-item
+                padding 0 10px
+                .van_card
+                    width 100%
+                    position relative
+                    background-color #fff
+                    padding 0
+                    border-bottom 1px solid #F2F2F2
+                    .title
+                        font-size 18px
+                        font-weight bold
+                    .desc
+                        margin-top 7px
+                        margin-right 5px
+                        p
+                            line-height 20px
+                            height 20px
+                            overflow hidden
+                            text-overflow ellipsis
+                            white-space nowrap
+                            span:nth-child(1)
+                                margin-right 5px
+                    .footer
+                        position absolute
+                        top 40%
+                        right 0
+                        font-size 25px
 </style>

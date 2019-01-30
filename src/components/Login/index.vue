@@ -1,21 +1,17 @@
 <template>
-    <div class='container'>
-        <div class='img_wrap'>
-            <img class='logo-img' src='./../../assets/logo.png' />
-            <br>
-            <img class='text-img' src='./../../assets/coding.png' />
-            <img class='money-img' src='./../../assets/money.png' />
-        </div>
+    <div class='container' :style='{background: `url(${res})`, backgroundSize: `cover`}'>
         <div class='login-from'>
-            <div class='form-item'>
-                <input class='phone' v-model='phone' placeholder='请输入您的手机号' />
+            <div class='jhh-login-from'>
+                <div class='jhh-login-form-item'>
+                    <input class='phone' v-model='phone' placeholder='请输入您的手机号' />
+                </div>
+                <div class='jhh-login-form-item'>
+                    <input class='phone' v-model='smsCode' placeholder='验证码' />
+                    <span @click='showMask' v-show='!sendStatus'>获取验证码</span>
+                    <span v-show='sendStatus'>s后在获取</span>
+                </div>
+                <button @click='login'>立即借款</button>
             </div>
-            <div class='form-item-code form-item'>
-                <input class='sms-code' v-model='smsCode' placeholder='请输入验证码' />
-                <button class='smg-botton' @click='showMask' v-show='!sendStatus'>获取验证码</button>
-                <button class='smg-botton' v-show='sendStatus'>{{sendTime}}s后在获取</button>
-            </div>
-            <button class='login' @click='login'>立即借款</button>
             <div class='insurance'>
                 <div class='insurance-item'>
                     <el-checkbox class='insurance-item-checkbox' v-model='protocol'></el-checkbox>
@@ -59,7 +55,8 @@
                 imgCode: '',
                 sendStatus: false,
                 sendTime: 60,
-                baseUrl
+                baseUrl,
+                res: require('./../../assets/000.png'),
             }
         },
         created() {
@@ -177,11 +174,20 @@
 </script>
 
 <style scoped lang='stylus'>
+    .container >>> .el-checkbox__input
+        border 1px solid #fff
+        height 14px
+    .container >>> .el-checkbox__inner
+        border none
+        background none
+    .container >>> .el-checkbox__inner::after
+        left 5px
     .container
-            height 100vh
             min-height 100vh
-            background red
+            background-repeat no-repeat
             position relative
+            padding-top 365px
+            box-sizing border-box
         .img_wrap
             text-align center
             .logo-img
@@ -191,63 +197,47 @@
                 width 60%
             .money-img
                 width 90%
-        .login-from
-            padding 0 .94rem
-            box-sizing border-box
+        .jhh-login-from
+            width 90%
             margin 0 auto
-            overflow hidden
-            padding-top 1%
-            .form-item
+            box-sizing border-box
+            background #fff
+            padding 0 30px 30px 30px
+            border-radius 6px
+            .jhh-login-form-item
+                height 50px
+                line-height 50px
+                border-bottom 1px solid #ccc
                 display flex
-                margin-bottom 12px
-                .phone
-                    flex 1
-                    height .8rem
-                    min-height .56rem
-                    overflow hidden
-                    font-size .32rem
-                    padding-left .3rem
+                input
+                    width 60%
                     box-sizing border-box
-                    border-radius .4rem
-                    border 2px solid #ffd200
-                    background #fff
-                .sms-code
-                    width 50%
-                    height .8rem
-                    overflow hidden
-                    background #fff
-                    font-size .32rem
-                    padding-left .3rem
+                span
+                    color #0F95FF
+                    display block
+                    width 40%
+                    text-align right
+                    padding-right 3px
                     box-sizing border-box
-                    border-radius .4rem
-                    border 2px solid #ffd200
-                .smg-botton
-                    height .8rem
-                    width 46%
-                    background #ffEA00
-                    font-size .28rem
-                    color #333
-                    margin-left 3%
-                    border-radius .8rem
-                    float right
-            .login
-                margin-bottom .24rem
+            button
+                height 50px
+                display block
                 width 100%
-                height .8rem
-                background #ffEA00
-                color #333
-                font-size .3rem
-                border-radius .8rem
-                letter-spacing 1px
-            .insurance
-                width 100%
+                border-radius 30px
                 color #fff
-                .insurance-item
-                    margin-bottom .1rem
-                    display flex
-                    .insurance-item-checkbox
-                        color #fff
-                        margin-right 5px
+                background #0F95FF
+                margin-top 30px
+        .insurance
+            width 90%
+            margin 0 auto   
+            padding 30px 0 20px 0
+            color #fff
+            .insurance-item
+                margin-bottom .1rem
+                display flex
+                .insurance-item-checkbox
+                    color #fff
+                    margin-right 5px
         .mask
             background rgba(0, 0, 0, .5)
             position fixed
@@ -255,6 +245,7 @@
             right: 0
             left: 0
             bottom: 0
+            text-align center
             .mask-model 
                 width 6rem
                 height 4.66rem
